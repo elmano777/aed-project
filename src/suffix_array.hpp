@@ -11,6 +11,7 @@ struct SuffixArray {
   string s;
   vector<int> sa;
   vector<int> rank;
+  vector<int> lcp;
 
   explicit SuffixArray(string str) : s(std::move(str)) { build(); }
 
@@ -21,6 +22,7 @@ private:
     int n = size();
     sa.resize(n);
     rank.assign(n, 0);
+    lcp.assign(n, 0);
     if (n == 0)
       return;
     for (int i = 0; i < n; i++)
@@ -36,6 +38,25 @@ private:
 
       sort(sa.begin(), sa.end(), [&](int a, int b) { return key[a] < key[b]; });
       regroup([&](int i) { return key[i]; });
+    }
+
+    kasai();
+  }
+
+  void kasai() {
+    int n = size();
+    int h = 0;
+    for (int i = 0; i < n; i++) {
+      if (rank[i] > 0) {
+        int j = sa[rank[i] - 1];
+        while (i + h < n && j + h < n && s[i + h] == s[j + h])
+          h++;
+        lcp[rank[i]] = h;
+        if (h > 0)
+          h--;
+      } else {
+        h = 0;
+      }
     }
   }
 
