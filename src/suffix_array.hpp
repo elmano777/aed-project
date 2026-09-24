@@ -17,6 +17,34 @@ struct SuffixArray {
 
   int size() const { return (int)s.size(); }
 
+  int cmp_prefix(int i, const string &p) const {
+    return s.compare(i, p.size(), p);
+  }
+
+  pair<int, int> search(const string &p) const {
+    int n = size();
+
+    int lo = 0, hi = n;
+    while (lo < hi) {
+      int mid = (lo + hi) / 2;
+      if (cmp_prefix(sa[mid], p) < 0)
+        lo = mid + 1;
+      else
+        hi = mid;
+    }
+    int l = lo;
+
+    hi = n;
+    while (lo < hi) {
+      int mid = (lo + hi) / 2;
+      if (cmp_prefix(sa[mid], p) <= 0)
+        lo = mid + 1;
+      else
+        hi = mid;
+    }
+    return {l, lo};
+  }
+
 private:
   void build() {
     int n = size();
