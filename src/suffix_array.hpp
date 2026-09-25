@@ -8,10 +8,23 @@
 using namespace std;
 
 struct SuffixArray {
+  struct Round {
+    int k;
+    vector<int> sa;
+    vector<int> rank;
+  };
+
+  struct Step {
+    bool upper;
+    int lo, hi, mid;
+    bool go_right;
+  };
+
   string s;
   vector<int> sa;
   vector<int> rank;
   vector<int> lcp;
+  vector<Round> rounds;
 
   explicit SuffixArray(string str) : s(std::move(str)) { build(); }
 
@@ -21,13 +34,16 @@ struct SuffixArray {
     return s.compare(i, p.size(), p);
   }
 
-  pair<int, int> search(const string &p) const {
+  pair<int, int> search(const string &p, vector<Step> *trace = nullptr) const {
     int n = size();
 
     int lo = 0, hi = n;
     while (lo < hi) {
       int mid = (lo + hi) / 2;
-      if (cmp_prefix(sa[mid], p) < 0)
+      bool right = cmp_prefix(sa[mid], p) < 0;
+      if (trace)
+        trace->push_back({false, lo, hi, mid, right});
+      if (right)
         lo = mid + 1;
       else
         hi = mid;
@@ -37,7 +53,10 @@ struct SuffixArray {
     hi = n;
     while (lo < hi) {
       int mid = (lo + hi) / 2;
-      if (cmp_prefix(sa[mid], p) <= 0)
+      bool right = cmp_prefix(sa[mid], p) <= 0;
+      if (trace)
+        trace->push_back({true, lo, hi, mid, right});
+      if (right)
         lo = mid + 1;
       else
         hi = mid;
@@ -58,6 +77,7 @@ private:
 
     sort(sa.begin(), sa.end(), [&](int a, int b) { return s[a] < s[b]; });
     regroup([&](int i) { return make_pair((int)(unsigned char)s[i], -1); });
+    rounds.push_back({0, sa, rank});
 
     for (int k = 1; rank[sa[n - 1]] < n - 1; k <<= 1) {
       vector<pair<int, int>> key(n);
@@ -66,6 +86,7 @@ private:
 
       sort(sa.begin(), sa.end(), [&](int a, int b) { return key[a] < key[b]; });
       regroup([&](int i) { return key[i]; });
+      rounds.push_back({k, sa, rank});
     }
 
     kasai();

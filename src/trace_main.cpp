@@ -19,9 +19,27 @@ int main(int argc, char** argv) {
   printf(",\"lcp\":");
   print_arr(A.lcp);
 
+  printf(",\"rounds\":[");
+  for (size_t r = 0; r < A.rounds.size(); r++) {
+    auto& R = A.rounds[r];
+    printf("%s{\"k\":%d,\"sa\":", r ? "," : "", R.k);
+    print_arr(R.sa);
+    printf(",\"rank\":");
+    print_arr(R.rank);
+    printf("}");
+  }
+  printf("]");
+
   if (!p.empty()) {
-    auto [l, r] = A.search(p);
-    printf(",\"pattern\":\"%s\",\"range\":[%d,%d]", p.c_str(), l, r);
+    vector<SuffixArray::Step> steps;
+    auto [l, r] = A.search(p, &steps);
+    printf(",\"pattern\":\"%s\",\"range\":[%d,%d],\"steps\":[", p.c_str(), l, r);
+    for (size_t i = 0; i < steps.size(); i++) {
+      auto& st = steps[i];
+      printf("%s{\"upper\":%s,\"lo\":%d,\"hi\":%d,\"mid\":%d,\"go_right\":%s}", i ? "," : "",
+             st.upper ? "true" : "false", st.lo, st.hi, st.mid, st.go_right ? "true" : "false");
+    }
+    printf("]");
   }
 
   printf("}\n");
