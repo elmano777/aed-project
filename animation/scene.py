@@ -1,7 +1,6 @@
 """
 Animación del proyecto Suffix Array (CS2023 - UTEC 2026-2).
-Equipo: Aguirre Milla, Fernando Eliseo David; Velásquez Díaz, [nombre]; Díaz Jara, Rolando David.
-
+Equipo: Aguirre Milla, Fernando; Velásquez Díaz, Eliseo David; Díaz Jara, Rolando David.
 IMPORTANTE: esta escena NO simula valores a mano. Cada arreglo, ronda y paso de
 búsqueda que se anima viene de ejecutar de verdad el binario build/sa_trace,
 compilado a partir de src/suffix_array.hpp (la implementación real del grupo).
