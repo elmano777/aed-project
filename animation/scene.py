@@ -1,16 +1,3 @@
-"""
-Animación del proyecto Suffix Array (CS2023 - UTEC 2026-2).
-Equipo: Aguirre Milla, Fernando; Velásquez Díaz, Eliseo David; Díaz Jara, Rolando David.
-IMPORTANTE: esta escena NO simula valores a mano. Cada arreglo, ronda y paso de
-búsqueda que se anima viene de ejecutar de verdad el binario build/sa_trace,
-compilado a partir de src/suffix_array.hpp (la implementación real del grupo).
-
-Uso:
-    make -C ..                       # compila build/sa_trace si no existe
-    manim -pql scene.py SuffixArrayScene     # render rápido (borrador)
-    manim -pqh scene.py SuffixArrayScene     # render final en alta calidad
-"""
-
 import json
 import subprocess
 from pathlib import Path
@@ -21,24 +8,21 @@ ROOT = Path(__file__).resolve().parent.parent
 
 
 def _find_sa_trace_bin() -> Path:
-    """Busca el binario compilado, con o sin extensión .exe (Windows vs Linux/Mac)."""
     for name in ("sa_trace.exe", "sa_trace"):
         candidate = ROOT / "build" / name
         if candidate.exists():
             return candidate
-    return ROOT / "build" / "sa_trace"  # por defecto, para el mensaje de error
+    return ROOT / "build" / "sa_trace"
 
 
 SA_TRACE_BIN = _find_sa_trace_bin()
 
 STRING = "banana"
 PATTERN = "ana"
-EDGE_STRING = "aaa"  # caso borde: todos los caracteres repetidos
+EDGE_STRING = "aaa"
 
 
 def run_trace(s: str, pattern: str = "") -> dict:
-    """Llama al binario real compilado desde la implementación del grupo y
-    parsea su salida JSON. Esto es lo que hace que la animación sea 'real'."""
     if not SA_TRACE_BIN.exists():
         raise FileNotFoundError(
             f"No se encontró {SA_TRACE_BIN}. Corre 'make' en la raíz del proyecto primero."
@@ -62,7 +46,6 @@ class SuffixArrayScene(Scene):
         self.show_applications()
         self.show_credits()
 
-    # ------------------------------------------------------------------
     def show_title(self):
         title = Text("Suffix Array", font_size=64, weight=BOLD)
         subtitle = Text(

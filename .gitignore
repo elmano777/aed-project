@@ -1,7 +1,8 @@
 build/
-*.pdf
 
 .idea/
 animation/media/
+
+animation/__pycache__/
 
 animation/__pycache__/
