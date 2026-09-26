@@ -1,2 +1,7 @@
 build/
 *.pdf
+
+.idea/
+animation/media/
+
+animation/__pycache__/
